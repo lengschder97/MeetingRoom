@@ -52,7 +52,7 @@ def calendarIteration():
     busyTimesFlat = []
     counter = 0
     for events in calendarItems:
-        tempDict = {'start':str(calendarItems[counter][0]), 'end':str(calendarItems[counter][1]), 'title':calendarItems[counter][2].name, 'subject':calendarItems[counter][3]}
+        tempDict = {'start':str(calendarItems[counter][0]), 'end':str(calendarItems[counter][1]), 'title':calendarItems[counter][2].name + ": " + calendarItems[counter][3]}
         busyTimes = busyTimes+[list(range(int(tempDict['start'][11:16].replace(':','')),(int(tempDict['end'][11:16].replace(':','')))+1))]
         busyTimesFlat = [item for sublist in busyTimes for item in sublist]
         meetingList.append(tempDict)
