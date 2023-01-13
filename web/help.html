@@ -28,7 +28,7 @@
 		function busyBackground() {
 			document.body.style.backgroundColor = "#cc0000";
 			var div = document.getElementById('availability');
-			div.innerHTML = '<h3 style="color: #cc0000; text-align: center;">Busy</h3>';
+			div.innerHTML = '<h3 style="color: #cc0000; text-align: center;">Belegt</h3>';
 		};
 
         // Makes the JavaScript function busyBackground available for Python to change backgroundColor and availability text.
@@ -37,7 +37,7 @@
 		function availableBackground() {
 			document.body.style.backgroundColor = "green";
 			var div = document.getElementById('availability');
-			div.innerHTML = '<h3 style="color: green; text-align: center;">Available</h3>';
+			div.innerHTML = '<h3 style="color: green; text-align: center;">Frei</h3>';
 		};
 
         // A function to return to the main page after 30 seconds of inactivity to avoid interrupting the user.
@@ -74,8 +74,8 @@
 		</div>
 		<div id="meetingRoom"></div>
 		<div id='availability'></div>
-		<p class="leftButton"><a href="newmeeting.html"><img src="./media/plus.png" style="width: 70%" alt="Book meeting image"></a>Book now</p>
-        <p class="rightButton"><a href="main.html"><img src="./media/cancel.png" style="width: 70%" alt="Book meeting image"></a>Cancel</p>
+		<p class="leftButton"><a href="newmeeting.html"><img src="./media/plus.png" style="width: 70%" alt="Book meeting image"></a>Buchen</p>
+        <p class="rightButton"><a href="main.html"><img src="./media/cancel.png" style="width: 70%" alt="Book meeting image"></a>Abbruch</p>
 	</div>
 
 	<div id="right-content" class="col-7">
@@ -86,17 +86,17 @@
 		<table id="mailTable">
 			<tr>
 				<td>
-					<button type='submit' id="mailButtonVideo" value='video' class="btn btn-light" style="width: 300px;"><img src="./media/mail.png" class="mailImage">Report problem with projector/screen</button>
+					<button type='submit' id="mailButtonVideo" value='video' class="btn btn-light" style="width: 300px;"><img src="./media/mail.png" class="mailImage">Problem mit Beamer/Bildschirm melden</button>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<button type='submit' id="mailButtonAudio" value='audio' class="btn btn-light" style="width: 300px;"><img src="./media/mail.png" class="mailImage">Report problem with speakers/sound</button>
+					<button type='submit' id="mailButtonAudio" value='audio' class="btn btn-light" style="width: 300px;"><img src="./media/mail.png" class="mailImage">Problem mit Lautsprecher/Sound melden</button>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<button type='submit' id="mailButtonCables" value='cables' class="btn btn-light" style="width: 300px;"><img src="./media/mail.png" class="mailImage">Report about missing cables</button>
+					<button type='submit' id="mailButtonCables" value='cables' class="btn btn-light" style="width: 300px;"><img src="./media/mail.png" class="mailImage">Fehlende Kabel melden</button>
 				</td>
 			</tr>
             <tr>
@@ -119,13 +119,13 @@
         // Outside the if statement, at the end of the function, a key called 'video' will be created in the browsers local storage containing today's date as the value.
 		$("#mailButtonVideo").click(function() {
 			if (localStorage.getItem("video") !== Date().substring(0, 10)) {
-				eel.sendMail("Problems with projector/screen in meeting room " + meetingRoomName, "A user har reported problems with the projector/screen in meeting room " + meetingRoomName);
-                $('#mailTable').replaceWith("<div class='alert alert-success' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>An email regarding this problem has been sent to help desk."+'</br>'+" Thank you for letting us know!</div>");
+				eel.sendMail("Problem mit Beamer/Bildschirm im Konferenzraum " + meetingRoomName, "Ein Nutzer meldete Probleme mit dem Beamer/Bildschirm im Konferenzraum " + meetingRoomName);
+                $('#mailTable').replaceWith("<div class='alert alert-success' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>Eine Email zu diesem Problem wurde an den Helpdesk gesendet."+'</br>'+" Vielen Dank für die Information!</div>");
                 setTimeout(function(){
                     window.location.replace("main.html");
                 }, 5000);
 			} else {
-                $('#mailTable').replaceWith("<div class='alert alert-warning' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>An email regarding this has already been sent to help desk today."+'</br>'+" Thank you for wanting to let us know!</div>");
+                $('#mailTable').replaceWith("<div class='alert alert-warning' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>Eine Email zu diesem Problem wurde heute bereits an den Helpdesk gesendet."+'</br>'+" Vielen Dank für die Information!</div>");
                 setTimeout(function(){
                     window.location.replace("main.html");
                 }, 5000);
@@ -140,13 +140,13 @@
         // Outside the if statement, at the end of the function, a key called 'audio' will be created in the browsers local storage containing today's date as the value.
 		$("#mailButtonAudio").click(function() {
 			if (localStorage.getItem("audio") !== Date().substring(0, 10)) {
-				eel.sendMail("Problems with speakers/sound in meeting room " + meetingRoomName, "A user har reported problems with the speakers/sound in meeting room " + meetingRoomName);
-                $('#mailTable').replaceWith("<div class='alert alert-success' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>An email regarding this problem has been sent to help desk."+'</br>'+" Thank you for letting us know!</div>");
+				eel.sendMail("Problem mit Lautsprecher/Audio im Konferenzraum " + meetingRoomName, "Ein Nutzer meldete Probleme mit dem Lautsprecher/Audio im Konferenzraum" + meetingRoomName);
+                $('#mailTable').replaceWith("<div class='alert alert-success' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>Eine Email zu diesem Problem wurde an den Helpdesk gesendet."+'</br>'+" Vielen Dank für die Information!</div>");
                 setTimeout(function(){
                     window.location.replace("main.html");
                 }, 5000);
             } else {
-                $('#mailTable').replaceWith("<div class='alert alert-warning' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>An email regarding this has already been sent to help desk today."+'</br>'+" Thank you for wanting to let us know!</div>");
+                $('#mailTable').replaceWith("<div class='alert alert-warning' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>Eine Email zu diesem Problem wurde heute bereits an den Helpdesk gesendet."+'</br>'+" Vielen Dank für die Information!</div>");
                 setTimeout(function(){
                     window.location.replace("main.html");
                 }, 5000);
@@ -161,13 +161,13 @@
         // Outside the if statement, at the end of the function, a key called 'cables' will be created in the browsers local storage containing today's date as the value.
 		$("#mailButtonCables").click(function() {
 			if (localStorage.getItem("cables") !== Date().substring(0, 10)) {
-				eel.sendMail("Cables missing in meeting room " + meetingRoomName, "A user har reported missing cables in meeting room " + meetingRoomName);
-                $('#mailTable').replaceWith("<div class='alert alert-success' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>An email regarding this problem has been sent to help desk."+'</br>'+" Thank you for letting us know!</div>");
+				eel.sendMail("Fehlende Kabel im Konferenzraum " + meetingRoomName, "Ein Nutzer meldete fehlende Kabel im Konferenzraum " + meetingRoomName);
+                $('#mailTable').replaceWith("<div class='alert alert-success' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>Eine Email zu diesem Problem wurde an den Helpdesk gesendet."+'</br>'+" Vielen Dank für die Information!</div>");
                 setTimeout(function(){
                     window.location.replace("main.html");
                 }, 5000);
 			} else {
-                $('#mailTable').replaceWith("<div class='alert alert-warning' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>An email regarding this has already been sent to help desk today."+'</br>'+" Thank you for wanting to let us know!</div>");
+                $('#mailTable').replaceWith("<div class='alert alert-warning' style='width: 300px; top: 15%; margin-left: auto; margin-right: auto;'>Eine Email zu diesem Problem wurde heute bereits an den Helpdesk gesendet."+'</br>'+" Vielen Dank für die Information!</div>");
                 setTimeout(function(){
                     window.location.replace("main.html");
                 }, 5000);
@@ -198,7 +198,7 @@
         async function getPhoneNumber() {
             let n = await eel.getPhoneNumberPy()();
             phoneNumber = n;
-            $('#immediateHelp').replaceWith("<div class='alert alert-dark' id='immediateHelp' style='width: 300px; text-align:center;'>For other problems or questions,"+'</br>'+"send an email to "+'<strong>'+ mailAddress +'</strong>'+" or call help desk at: "+ '<strong>' + phoneNumber+ '</strong>'+"</div>");
+            $('#immediateHelp').replaceWith("<div class='alert alert-dark' id='immediateHelp' style='width: 300px; text-align:center;'>Für andere Probleme oder Fragen,"+'</br>'+"senden Sie eine E-Mail an "+'<strong>'+ mailAddress +'</strong>'+" oder rufen Sie den Helpdesk an unter: "+ '<strong>' + phoneNumber+ '</strong>'+"</div>");
         }
 
 	getRoomName();
