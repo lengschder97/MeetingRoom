@@ -1,4 +1,6 @@
 config = {
+    'server' : 'mail.company.com', #Exchange server adress.
+    'authtype' : 'NTLM', #Authentification type if autodiscover is not possible
     'username' : 'DOMAIN\\USERNAME', # The meeting room account's username written like shown.
     'password' : 'PASSword1234', # The meeting room account's password.
     'account' : 'USERNAME@company.com', # The meeting room's mail address.
