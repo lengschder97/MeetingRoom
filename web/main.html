@@ -22,7 +22,7 @@
 		setInterval(setTime, 500);
 
 		$(document).ready(function() {
-			var initialLocaleCode = 'de'; // When the document is ready, set the locale for the calendar
+			var initialLocaleCode = 'DE'; // When the document is ready, set the locale for the calendar
 			var scrollTime = moment().subtract(2, 'hours').format('HH:mm:ss'); // Set a variable for current time minus 2 hours to use for centering the calendar view.
 
             // Add fullcalendar with your specified settings. This application is built with only today's view in mind.
@@ -45,8 +45,8 @@
 				scrollTime: scrollTime, // What time the calendar will be scrolled to. Points to the scrollTime variable.
 				themeSystem: 'bootstrap4', // Which theme to use for the calendar.
 				businessHours: {
-					start: '08:00', // Start time (08:00 in this example) for business hours which will be slightly highlighted in the calendar view.
-					end: '15:30', // End time (15:30 in this example) for business hours which will be slightly highlighted in the calendar view.
+					start: '07:00', // Start time (08:00 in this example) for business hours which will be slightly highlighted in the calendar view.
+					end: '17:00', // End time (17:00 in this example) for business hours which will be slightly highlighted in the calendar view.
 				},
 				eventLimit: true, // Allow 'more' link when too many events
 				events: {
@@ -69,16 +69,16 @@
 		function busyBackground() {
 			document.body.style.backgroundColor = "#cc0000";
 			var div = document.getElementById('availability');
-			div.innerHTML = '<h3 style="color: #cc0000; text-align: center;">Busy</h3>';
+			div.innerHTML = '<h3 style="color: #cc0000; text-align: center;">Belegt</h3>';
 		}
 
         // Makes the JavaScript function availableBackground available for Python to change backgroundColor and availability text.
-        // The text "Available" in green color will be inserted into the availability div.
+        // The text "Frei" in green color will be inserted into the availability div.
 		eel.expose(availableBackground);
 		function availableBackground() {
 			document.body.style.backgroundColor = "green";
 			var div = document.getElementById('availability');
-			div.innerHTML = '<h3 style="color: green; text-align: center;">Available</h3>';
+			div.innerHTML = '<h3 style="color: green; text-align: center;">Frei</h3>';
 		}
 
         // A function that navigates to today in the calendar view.
@@ -122,8 +122,8 @@
 		</div>
 		<div id="meetingRoom"></div>
 		<div id='availability'></div>
-		<p class='leftButton'><a href='newmeeting.html'><img src='./media/plus.png' style='width: 70%' alt='Book meeting image'></a>Book now</p>
-		<p class='rightButton'><a href='help.html'><img src='./media/help.png' style='width: 70%' alt='Help image'></a>Help</p>
+		<p class='leftButton'><a href='newmeeting.html'><img src='./media/plus.png' style='width: 70%' alt='Book meeting image'></a>Buchen</p>
+		<p class='rightButton'><a href='help.html'><img src='./media/help.png' style='width: 70%' alt='Help image'></a>Hilfe</p>
 	</div>
 
 
