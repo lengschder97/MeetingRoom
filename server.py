@@ -46,5 +46,5 @@ web_app_options = {
 # to make sure the needed information is collected from Exchange before running.
 eel.sleep(2)
 
-# eel.start('main.html', size=(800, 480)) # Uncomment this for the application to run in a broswer window.
+eel.start('main.html', size=(800, 480)) # Uncomment this for the application to run in a broswer window.
 # eel.start('main.html', options=web_app_options) # Uncomment this for the application to run in Chrome's kiosk mode.
