@@ -6,10 +6,7 @@ from config import config
 import time
 import json
 from exchangelib.protocol import BaseProtocol, NoVerifyHTTPAdapter
-
-#Disable SSL Encriptions for easier connection to exchange server
 BaseProtocol.HTTP_ADAPTER_CLS = NoVerifyHTTPAdapter
-
 
 ''' calendarIteration is a function that saves all of today's meetings/events into a list of dictionaries called meetingList,
 and all the busy times into a list called busyTimesFlat.
@@ -29,14 +26,19 @@ def calendarIteration():
     calendarItems = []
     now = datetime.datetime.now()
     day, month, year = now.day, now.month, now.year
-    tz = EWSTimeZone.timezone('Europe/Berlin')
+    tz = EWSTimeZone('Europe/Oslo')
     credentials = Credentials(username=config['username'], password=config['password'])
     conf = Configuration(server=config['server'], credentials=credentials, auth_type=config['authtype'])
+    
     account = Account(config['account'], config=conf, autodiscover=False, access_type=DELEGATE)
+    
+    start = datetime.datetime.now(account.default_timezone)
     items = account.calendar.view(
-        start=datetime.datetime.now(account.default_timezone),
+        start=start,
         end=start + datetime.timedelta(days=1),
-        )
+    )
+
+
     if dst == 0:
         for item in items:
             today_events = [item.start + datetime.timedelta(hours=1), item.end + datetime.timedelta(hours=1), item.organizer, item.subject]
@@ -74,7 +76,9 @@ def bookMeeting(arg1, arg2):
     if (any(x in range(int(startTime)+1,int(endTime)) for x in busyTimesFlat)):
         eel.alertBusy()
     else:
-        item = CalendarItem(folder=account.calendar, subject='Booked on meeting room screen', start=EWSDateTime(year, month, day, int(startTime[:2]), int(startTime[2:4]), tzinfo=account.default_timezone), end=EWSDateTime(year, month, day, int(endTime[0:2]), int(endTime[2:4]), tzinfo=account.default_timezone))
+        #item = CalendarItem(folder=account.calendar, subject='Gebucht auf dem Bildschirm des Besprechungsraums', start=tz.localize(EWSDateTime(year, month, day, int(startTime[:2]), int(startTime[-2:]))), end=tz.localize(EWSDateTime(year, month, day, int(endTime[0:2]), int(endTime[2:4]))))
+        item = CalendarItem(folder=account.calendar, subject='Gebucht auf dem Bildschirm des Besprechungsraums', start=EWSDateTime(year, month, day, int(startTime[:2]), int(startTime[2:4]), tzinfo=account.default_timezone), end=EWSDateTime(year, month, day, int(endTime[0:2]), int(endTime[2:4]), tzinfo=account.default_timezone))
+
         item.save()
         calendarIteration()
         eel.redirectMain()
@@ -96,9 +100,12 @@ Any mail sent is also saved in the meeting room's sent mail folder. '''
 
 @eel.expose
 def sendMail(arg1, arg2):
+
     cr = Credentials(username=config['username'], password=config['password'])
     con = Configuration(server=config['server'], credentials=cr, auth_type=config['authtype'])
-    a = Account(config['account'], config=con, autodiscover=False, access_type=DELEGATE) 
+    
+    a = Account(config['account'], config=con, autodiscover=False, access_type=DELEGATE)
+
     m = Message(
     	account = a,
     	folder = a.sent,
