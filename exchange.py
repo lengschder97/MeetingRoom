@@ -1,10 +1,15 @@
 import eel
 import datetime
-from exchangelib import Credentials, Account, EWSDateTime, EWSTimeZone, CalendarItem
-from exchangelib.folders import Calendar, Message, Mailbox
+from exchangelib import Credentials, Account, EWSDateTime, EWSTimeZone, CalendarItem, Configuration, DELEGATE, Message, Mailbox
+from exchangelib.folders import Calendar
 from config import config
 import time
 import json
+from exchangelib.protocol import BaseProtocol, NoVerifyHTTPAdapter
+
+#Disable SSL Encriptions for easier connection to exchange server
+BaseProtocol.HTTP_ADAPTER_CLS = NoVerifyHTTPAdapter
+
 
 ''' calendarIteration is a function that saves all of today's meetings/events into a list of dictionaries called meetingList,
 and all the busy times into a list called busyTimesFlat.
@@ -24,27 +29,28 @@ def calendarIteration():
     calendarItems = []
     now = datetime.datetime.now()
     day, month, year = now.day, now.month, now.year
-    tz = EWSTimeZone.timezone('Europe/Oslo')
+    tz = EWSTimeZone.timezone('Europe/Berlin')
     credentials = Credentials(username=config['username'], password=config['password'])
-    account = Account(config['account'], credentials=credentials, autodiscover=True)
+    conf = Configuration(server=config['server'], credentials=credentials, auth_type=config['authtype'])
+    account = Account(config['account'], config=conf, autodiscover=False, access_type=DELEGATE)
     items = account.calendar.view(
-        start=tz.localize(EWSDateTime(year, month, day)),
-        end=tz.localize(EWSDateTime(year, month, day)) + datetime.timedelta(days=1),
+        start=datetime.datetime.now(account.default_timezone),
+        end=start + datetime.timedelta(days=1),
         )
     if dst == 0:
         for item in items:
-            today_events = [item.start + datetime.timedelta(hours=1), item.end + datetime.timedelta(hours=1), item.organizer]
+            today_events = [item.start + datetime.timedelta(hours=1), item.end + datetime.timedelta(hours=1), item.organizer, item.subject]
             calendarItems.append(today_events)
     else:
         for item in items:
-            today_events = [item.start + datetime.timedelta(hours=2), item.end + datetime.timedelta(hours=2), item.organizer]
+            today_events = [item.start + datetime.timedelta(hours=2), item.end + datetime.timedelta(hours=2), item.organizer, item.subject]
             calendarItems.append(today_events)
     meetingList = []
     busyTimes = []
     busyTimesFlat = []
     counter = 0
     for events in calendarItems:
-        tempDict = {'start':str(calendarItems[counter][0]), 'end':str(calendarItems[counter][1]), 'title':calendarItems[counter][2].name}
+        tempDict = {'start':str(calendarItems[counter][0]), 'end':str(calendarItems[counter][1]), 'title':calendarItems[counter][2].name, 'subject':calendarItems[counter][3]}
         busyTimes = busyTimes+[list(range(int(tempDict['start'][11:16].replace(':','')),(int(tempDict['end'][11:16].replace(':','')))+1))]
         busyTimesFlat = [item for sublist in busyTimes for item in sublist]
         meetingList.append(tempDict)
@@ -68,7 +74,7 @@ def bookMeeting(arg1, arg2):
     if (any(x in range(int(startTime)+1,int(endTime)) for x in busyTimesFlat)):
         eel.alertBusy()
     else:
-        item = CalendarItem(folder=account.calendar, subject='Booked on meeting room screen', start=tz.localize(EWSDateTime(year, month, day, int(startTime[:2]), int(startTime[-2:]))), end=tz.localize(EWSDateTime(year, month, day, int(endTime[0:2]), int(endTime[2:4]))))
+        item = CalendarItem(folder=account.calendar, subject='Booked on meeting room screen', start=EWSDateTime(year, month, day, int(startTime[:2]), int(startTime[2:4]), tzinfo=account.default_timezone), end=EWSDateTime(year, month, day, int(endTime[0:2]), int(endTime[2:4]), tzinfo=account.default_timezone))
         item.save()
         calendarIteration()
         eel.redirectMain()
@@ -90,7 +96,9 @@ Any mail sent is also saved in the meeting room's sent mail folder. '''
 
 @eel.expose
 def sendMail(arg1, arg2):
-    a = Account(config['account'], credentials=Credentials(username=config['username'], password=config['password']), autodiscover=True)
+    cr = Credentials(username=config['username'], password=config['password'])
+    con = Configuration(server=config['server'], credentials=cr, auth_type=config['authtype'])
+    a = Account(config['account'], config=con, autodiscover=False, access_type=DELEGATE) 
     m = Message(
     	account = a,
     	folder = a.sent,
